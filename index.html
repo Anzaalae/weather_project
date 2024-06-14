@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Weather App</h1>
-        <form id="weather-form">
-            <input type="text" id="city" placeholder="Enter city name">
-            <button type="submit">Get Weather</button>
-        </form>
-        <div id="weather-result">
-            <!-- Weather info will be displayed here -->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Weather App</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>Weather App</h1>
+            <button onclick="getLocation()">Get Current Location Weather</button>
+            <form id="weather-form">
+                <input type="text" id="city" placeholder="Enter city name">
+                <button type="submit">Get Weather</button>
+            </form>
+            <div id="weather-result">
+                <!-- 날씨 정보 띄우기 -->
+            </div>
         </div>
-    </div>
-    <script src="script.js"></script>
-</body>
+        <script src="script.js"></script>
+    </body>
 </html>
