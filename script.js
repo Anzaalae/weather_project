@@ -11,7 +11,7 @@ document.getElementById('weather-form').addEventListener('submit', function (eve
                 const lat = data.coord.lat;
                 const lon = data.coord.lon;
                 displayWeather(data);
-                getHourlyForecast(lat, lon);
+                getForecast(lat, lon);
             } else {
                 alert('City not found');
             }
@@ -62,7 +62,7 @@ function getWeatherByCoordinates(lat, lon) {
         .then(data => {
             if (data.cod === 200) {
                 displayWeather(data);
-                getHourlyForecast(lat, lon);
+                getForecast(lat, lon);
             } else {
                 alert('Weather data not found for your location');
             }
@@ -91,26 +91,26 @@ function displayWeather(data) {
         <p>Sunset: ${new Date(data.sys.sunset * 1000).toLocaleTimeString()}</p>
         <p>Visibility: ${data.visibility} m</p>
         <p>Data Time: ${new Date(data.dt * 1000).toLocaleString()}</p>
-        <h2>Hourly Forecast</h2>
+        <h2>3-Hourly Forecast</h2>
         <div id="hourly-forecast"></div>
     `;
 }
 
-function getHourlyForecast(lat, lon) {
+function getForecast(lat, lon) {
     const apiKey = '54915be7353444b12851944334c325ef'; // API 키
-    const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,daily,alerts&appid=${apiKey}&units=metric`;
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            if (data.hourly && data.hourly.length > 0) {
-                const hourlyForecast = data.hourly.slice(0, 5); // 5시간 예보 가져오기
+            if (data.list && data.list.length > 0) {
+                const hourlyForecast = data.list.slice(0, 5); // 3시간 가격으로 5개의 온도 데이터
                 let forecastHtml = '';
                 hourlyForecast.forEach(hour => {
                     const date = new Date(hour.dt * 1000);
                     const hours = date.getHours();
-                    const temperature = hour.temp;
-                    forecastHtml += `<p>${hours}:00 - ${temperature}°C</p>`;
+                    const temperature = hour.main.temp;
+                    forecastHtml += `<p>${date.toLocaleString()} - ${temperature}°C</p>`;
                 });
                 document.getElementById('hourly-forecast').innerHTML = forecastHtml;
             } else {
