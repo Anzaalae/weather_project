@@ -42,7 +42,7 @@
     background-color: blue;
 }
 
-.humidity-container {
+.wind-container {
     clear: both;
     text-align: center;
     width: 100%;
@@ -50,7 +50,7 @@
     background-color:brown;
 }
 
-.wind-speed-container {
+.pressure-container {
     clear: both;
     text-align: center;
     width: 100%;
@@ -58,11 +58,12 @@
     background-color: darkorange;
 }
 
-.footer-container {
+.forecast-container {
+    position: relative;
     clear: both;
     text-align: center;
     width: 100%;
-    height: 140px;
+    height: 100%;
     background-color: darkorchid;
 }
 
@@ -75,17 +76,37 @@
 }
 
 .search-button {
+    margin: 10px;
     padding: 10px;
-    border: 1px solid black;
+    border: 0px;
     border-radius: 4px;
 }
 
+#searchButton {
+    color: #ffffff;
+    background-color: #3333ff;
+}
+
 #searchButton:hover {
-    background-color: aqua;
+    color: #ffffff;
+    background-color: #0000cc;
 }
 
 #searchButton:active {
-    background-color: blue;
+    color: #ffffff;
+    background-color: #000077;
+}
+
+#currentLocation {
+
+}
+
+#currentLocation:hover {
+    background-color: #dddddd;
+}
+
+#currentLocation:active {
+    background-color: #aaaaaa;
 }
 
 .preview {
@@ -117,14 +138,6 @@
     background-color: white;
 }
 
-.city-name {
-    position: absolute;
-    top: 0%;
-    left: 10%;
-    padding: 5px;
-    background-color: white;
-}
-
 .temperature-preview {
     position: absolute;
     top: 0%;
@@ -133,28 +146,71 @@
     background-color: white;
 }
 
-.temperature {
-
-}
-
 .weather-preview {
 
 }
 
-.weather {
+.city-name {
     position: absolute;
-    top: 40%;
-    left: 10%;
+    top: 0%;
+    left: 3%;
     padding: 5px;
     background-color: white;
+}
+
+.weather {
+    position: absolute;
+    top: 15%;
+    left: 3%;
+    padding: 5px;
+    background-color: white;
+}
+
+.data-time {
+    position: absolute;
+    top: 0%;
+    left: 62%;
+    padding: 5px;
+    background-color: white;
+}
+
+.temperature {
+
+}
+
+.feels-like {
+
 }
 
 .humidity {
 
 }
 
+.wind-direction {
+
+}
+
 .wind-speed {
 
+}
+
+.pressure {
+
+}
+
+.cloudiness {
+
+}
+
+.forecast-header {
+    position: absolute;
+    top: 0%;
+    left: 3%;
+    background-color: white;
+}
+
+.forecast-data {
+    
 }
 
 .display-none {

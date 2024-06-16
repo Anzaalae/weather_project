@@ -1,4 +1,7 @@
-let cityName, temperature, weather, humidity, windSpeed; // 날씨 정보 전역변수
+let cityName, weather, temperature, feelsLike, humidity, 
+windDirection, windSpeed, pressure, cloudiness, 
+sunrise, sunset; // 날씨 정보 전역변수
+
 let addButton, deleteButton;
 
 let previewList;
@@ -14,96 +17,25 @@ else {
     previewContainer.classList.add("preview-container");
 }
 
-
 const searchButton = document.querySelector("#searchButton");
+const currentLocation = document.querySelector("#currentLocation");
+
 const addBtn = document.querySelector("#addBtn");
 
 const searchEvent = function searchEvent(event) {
     event.preventDefault();
     const city = document.querySelector("#searchBar").value;
-    const apiKey = '54915be7353444b12851944334c325ef';                                                    // 제 API키 입니다
+    const apiKey = '54915be7353444b12851944334c325ef'; // 날씨 검색 API 키
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data.cod === 200) {
-                cityName = data.name;
-                temperature = data.main.temp;
-                weather = data.weather[0].description;
-                humidity = data.main.humidity;
-                windSpeed = data.wind.speed;
-
-                const detailLeft = document.querySelector(".detail-container-left");
-                detailLeft.innerHTML = `
-                    <h2 class="city-name">${cityName}</h2>
-                    <p class="weather">Weather: ${weather}</p>
-                `;
-
-                const temperatureContainer = document.querySelector(".temperature-container");
-                temperatureContainer.innerHTML = `
-                    <h2 class="no-margin">Temperature: ${temperature}°C</h2>
-                `;
-
-                const humidityContainer = document.querySelector(".humidity-container");
-                humidityContainer.innerHTML = `
-                    <h2 class="no-margin">Humidity: ${humidity}%</h2>
-                `;
-
-                const windSpeedContainer = document.querySelector(".wind-speed-container");
-                windSpeedContainer.innerHTML = `
-                    <h2 class="no-margin">Wind Speed: ${windSpeed}m/s</h2>
-                `;
-
-                // 검색된 날씨에 따라 배경 이미지를 다르게 설정
-                detailLeft.removeAttribute("class");
-                detailLeft.classList.add("detail-container-left");
-
-                switch (weather) {
-                    case "clear sky":
-                        detailLeft.classList.add("clear-sky");
-                        break;
-                    case "few clouds":
-                        detailLeft.classList.add("few-clouds");
-                        break;
-                    case "scattered clouds":
-                        detailLeft.classList.add("scattered-clouds");
-                        break;
-                    case "broken clouds":
-                        detailLeft.classList.add("broken-clouds");
-                        break;
-                    case "overcast clouds":
-                        detailLeft.classList.add("overcast-clouds");
-                        break;
-                    case "mist":
-                        detailLeft.classList.add("mist");
-                        break;
-                    case "fog":
-                        detailLeft.classList.add("fog");
-                        break;
-                    case "haze":
-                        detailLeft.classList.add("haze");
-                        break;
-                    case "light rain":
-                        detailLeft.classList.add("light-rain");
-                        break;
-                    case "moderate rain":
-                        detailLeft.classList.add("moderate-rain");
-                        break;
-                    case "heavy intensity rain":
-                        detailLeft.classList.add("heavy-intensity-rain");
-                        break;
-                    default:
-                }
-
-                addButton = document.createElement("button");
-                addButton.classList.add("add-button");
-                document.querySelector(".detail-container-left").appendChild(addButton);
-
-                addButton.appendChild(document.createTextNode("추가"));
-
-                addButton.addEventListener("click", addEvent);
-
+                const lat = data.coord.lat;
+                const lon = data.coord.lon;
+                displayWeather(data);
+                getForecast(lat, lon);
             } else {
                 alert('City not found');
             }
@@ -114,8 +46,180 @@ const searchEvent = function searchEvent(event) {
         });
 };
 
-const addEvent = function addEvent(event) {
-    event.preventDefault();
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+}
+
+function showPosition(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+    getWeatherByCoordinates(lat, lon);
+}
+
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            alert("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            alert("An unknown error occurred.");
+            break;
+    }
+}
+
+function getWeatherByCoordinates(lat, lon) {
+    const apiKey = '54915be7353444b12851944334c325ef'; // 날씨 검색 API 키
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.cod === 200) {
+                displayWeather(data);
+                getForecast(lat, lon);
+            } else {
+                alert('Weather data not found for your location');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching the weather data:', error);
+            alert('An error occurred while fetching the weather data');
+        });
+}
+
+const displayWeather = function displayWeather(data) {
+    cityName = data.name;
+    weather = data.weather[0].description;
+
+    temperature = data.main.temp;
+    feelsLike = data.main.feels_like;
+    humidity = data.main.humidity;
+
+    windDirection = data.wind.deg;
+    windSpeed = data.wind.speed;
+
+    pressure = data.main.pressure;
+    cloudiness = data.clouds.all;
+
+    const detailLeft = document.querySelector(".detail-container-left");
+    detailLeft.innerHTML = `
+        <h2 class="city-name no-margin">${cityName}</h2>
+        <p class="weather">Weather: ${weather}</p>
+        <p class="data-time no-margin">Data Time: ${new Date(data.dt * 1000).toLocaleString()}</p>
+    `;
+
+    const temperatureContainer = document.querySelector(".temperature-container");
+    temperatureContainer.innerHTML = `
+        <p class="temperature no-margin">Temperature: ${temperature}°C</p>
+        <p class="feels-like">Feels Like: ${feelsLike}</p>
+        <p class="humidity">Humidity: ${humidity}%</p>
+    `;
+
+    const windContainer = document.querySelector(".wind-container");
+    windContainer.innerHTML = `
+        <p class="wind-direction no-margin">Wind Direction: ${windDirection}</p>
+        <p class="wind-speed">Wind Speed: ${windSpeed}</p>
+    `;
+
+    const pressureContainer = document.querySelector(".pressure-container");
+    pressureContainer.innerHTML = `
+        <p class="pressure no-margin">Pressure: ${pressure}</p>
+        <p class="cloudiness">Cloudiness: ${cloudiness}</p>
+    `;
+
+    // 검색된 날씨에 따라 배경 이미지를 다르게 설정
+    detailLeft.removeAttribute("class");
+    detailLeft.classList.add("detail-container-left");
+
+    switch (weather) {
+        case "clear sky":
+            detailLeft.classList.add("clear-sky");
+            break;
+        case "few clouds":
+            detailLeft.classList.add("few-clouds");
+            break;
+        case "scattered clouds":
+            detailLeft.classList.add("scattered-clouds");
+            break;
+        case "broken clouds":
+            detailLeft.classList.add("broken-clouds");
+            break;
+        case "overcast clouds":
+            detailLeft.classList.add("overcast-clouds");
+            break;
+        case "mist":
+            detailLeft.classList.add("mist");
+            break;
+        case "fog":
+            detailLeft.classList.add("fog");
+            break;
+        case "haze":
+            detailLeft.classList.add("haze");
+            break;
+        case "light rain":
+            detailLeft.classList.add("light-rain");
+            break;
+        case "moderate rain":
+            detailLeft.classList.add("moderate-rain");
+            break;
+        case "heavy intensity rain":
+            detailLeft.classList.add("heavy-intensity-rain");
+            break;
+        default:
+    }
+
+    addButton = document.createElement("button");
+    addButton.classList.add("add-button");
+    document.querySelector(".detail-container-left").appendChild(addButton);
+
+    addButton.appendChild(document.createTextNode("ADD"));
+
+    addButton.addEventListener("click", addEvent);
+};
+
+function getForecast(lat, lon) {
+    const apiKey = '54915be7353444b12851944334c325ef'; // API 키
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+
+    console.log(lat);
+    console.log(lon);
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.list && data.list.length > 0) {
+                const hourlyForecast = data.list.slice(0, 5); // 3시간 간격으로 5개의 온도 데이터
+                let forecastHtml = '';
+                hourlyForecast.forEach(hour => {
+                    const date = new Date(hour.dt * 1000);
+                    const hours = date.getHours();
+                    const temperature = hour.main.temp;
+                    forecastHtml += `<p class="forecast-data">${date.toLocaleString()} - ${temperature}°C</p>`;
+                });
+                document.querySelector(".forecast-container").innerHTML = `
+                    <h2 class="forecast-header">Forecast(3 Hourly)</h2>
+                ` + forecastHtml;
+            } else {
+                alert('Hourly forecast data not available');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching the hourly forecast:', error);
+            alert('An error occurred while fetching the hourly forecast');
+        });
+}
+
+const addEvent = function addEvent(data) {
     // 추가하려는 지역과 기존의 지역의 중복 검사
     previewList = document.querySelectorAll(".preview-box");
 
@@ -187,7 +291,7 @@ const addEvent = function addEvent(event) {
     previewContainer.appendChild(previewBox);
 
     deleteButton = document.createElement("button");
-    deleteButton.appendChild(document.createTextNode("삭제"));
+    deleteButton.appendChild(document.createTextNode("DELETE"));
     deleteButton.classList.add("delete-button");
 
     previewBox.appendChild(deleteButton);
@@ -219,73 +323,28 @@ const deleteEvent = function deleteEvent(event) {
     }
 };
 
-const checkDetailEvent = function checkDetailEvent(event) {
-    event.preventDefault();
+const checkDetailEvent = function checkDetailEvent() {
+    const city = this.children[0].innerText;
+    const apiKey = '54915be7353444b12851944334c325ef'; // 날씨 검색 API 키
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
-    cityName = this.children[0].innerText;
-    temperature = this.children[1].innerText;
-    weather = this.children[2].innerText;
-    humidity = this.children[3].innerText;
-    windSpeed = this.children[4].innerText;
-
-        const detailLeft = document.querySelector(".detail-container-left");
-        detailLeft.innerHTML = `
-            <h2 class="city-name">${cityName}</h2>
-            <p class="weather">${weather}</p>
-        `;
-
-        const temperatureContainer = document.querySelector(".temperature-container");
-        temperatureContainer.innerHTML = `
-            <h2 class="no-margin">${temperature}</h2>
-        `;
-
-        const humidityContainer = document.querySelector(".humidity-container");
-        humidityContainer.innerHTML = `
-            <h2 class="no-margin">${humidity}</h2>
-        `;
-
-        const windSpeedContainer = document.querySelector(".wind-speed-container");
-        windSpeedContainer.innerHTML = `
-            <h2 class="no-margin">${windSpeed}</h2>
-        `;
-
-        // 검색된 날씨에 따라 배경 이미지를 다르게 설정
-        detailLeft.removeAttribute("class");
-        detailLeft.classList.add("detail-container-left");
-
-        if (weather.includes("clear sky") === true) {
-            detailLeft.classList.add("clear-sky");
-        }
-        else if (weather.includes("few clouds") === true) {
-            detailLeft.classList.add("few-clouds");
-        }
-        else if (weather.includes("scattered clouds") === true) {
-            detailLeft.classList.add("scattered-clouds");
-        }
-        else if (weather.includes("broken clouds") === true) {
-            detailLeft.classList.add("broken-clouds");
-        }
-        else if (weather.includes("overcast clouds") === true) {
-            detailLeft.classList.add("overcast-clouds");
-        }
-        else if (weather.includes("mist") === true) {
-            detailLeft.classList.add("mist");
-        }
-        else if (weather.includes("fog") === true) {
-            detailLeft.classList.add("fog");
-        }
-        else if (weather.includes("haze") === true) {
-            detailLeft.classList.add("haze");
-        }
-        else if (weather.includes("light rain") === true) {
-            detailLeft.classList.add("light-rain");
-        }
-        else if (weather.includes("moderate rain") === true) {
-            detailLeft.classList.add("moderate-rain");
-        }
-        else if (weather.includes("heavy intensity rain") === true) {
-            detailLeft.classList.add("heavy-intensity-rain");
-        }
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.cod === 200) {
+                const lat = data.coord.lat;
+                const lon = data.coord.lon;
+                displayWeather(data);
+                getForecast(lat, lon);
+            } else {
+                alert('City not found');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching the weather data:', error);
+            alert('An error occurred while fetching the weather data');
+        });
 };
 
 searchButton.addEventListener("click", searchEvent);
+currentLocation.addEventListener("click", getLocation);
