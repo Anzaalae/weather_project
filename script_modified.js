@@ -96,16 +96,6 @@ function displayWeather(data) {
         <h2>${data.name}</h2>
         <p>Temperature: ${data.main.temp}°C</p>
         <p>Weather: ${weatherDescription}</p>
-        <p>Humidity: ${data.main.humidity}%</p>
-        <p>Wind Speed: ${data.wind.speed} m/s</p>
-        <p>Feels Like: ${data.main.feels_like}°C</p>
-        <p>Pressure: ${data.main.pressure} hPa</p>
-        <p>Wind Direction: ${data.wind.deg}°</p>
-        <p>Cloudiness: ${data.clouds.all}%</p>
-        <p>Visibility: ${data.visibility} m</p>
-        <p>Sunrise: ${new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</p>
-        <p>Sunset: ${new Date(data.sys.sunset * 1000).toLocaleTimeString()}</p>
-        <p>Data Time: ${new Date(data.dt * 1000).toLocaleString()}</p>
     `;
 
     cityName = data.name;
@@ -175,13 +165,6 @@ function getForecast(lat, lon) {
 
                     forecastHtml += `<p>${date.toLocaleString()} - ${temperature}°C</p>`;
                 });
-
-                document.getElementById('hourly-forecast').innerHTML = `
-                    <h2>3-Hourly Forecast</h2>
-                    ${forecastHtml}
-                    <p>Min Temperature: ${minTemp}°C</p>
-                    <p>Max Temperature: ${maxTemp}°C</p>
-                `;
             } else {
                 alert('Hourly forecast data not available');
             }
