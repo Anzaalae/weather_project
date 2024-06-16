@@ -8,6 +8,9 @@
     </head>
 
     <body>
+        <div class="preview-container-left">
+            <!-- 왼쪽에 추가되는 카드(1번째, 2번째) -->
+        </div>
         <div class="container">
             <h1>Weather App</h1>
             <button onclick="getLocation()">Get Current Location Weather</button>
@@ -18,7 +21,11 @@
             <div id="weather-result">
                 <!-- 날씨 정보 띄우기 -->
             </div>
+            <div id="hourly-forecast"></div>
         </div>
-        <script src="script.js"></script>
+        <div class="preview-container-right">
+            <!-- 오른쪽에 추가되는 카드(3번째, 4번째) -->
+        </div>
+        <script src="script_modified.js"></script>
     </body>
 </html>

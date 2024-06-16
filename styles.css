@@ -9,11 +9,13 @@ body {
 }
 
 .container {
+    width: 34%;
     text-align: center;
     background: white;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    display: inline-block;
 }
 
 form {
@@ -42,4 +44,137 @@ button:hover {
 
 #weather-result {
     margin-top: 20px;
+    display: inline-block;
+}
+
+/* #hourly-forecast {
+
+} */
+
+.preview-container-left {
+    width: 33%;
+    text-align: center;
+    display: inline-block;
+}
+
+.preview-container-right {
+    width: 33%;
+    text-align: center;
+    display: inline-block;
+}
+
+.add-button {
+    padding: 8px;
+    border: 0px;
+    border-radius: 4px;
+    background-color: #007BFF;
+}
+
+.add-button:hover {
+    background-color: #0056b3;
+}
+
+.add-button:active {
+    background-color: #003393;
+}
+
+.delete-button {
+    padding: 7px;
+    border: 0px;
+    border-radius: 5px;
+    background-color: #007BFF;
+}
+
+.delete-button:hover {
+    background-color: #0056b3;
+}
+
+.delete-button:active {
+    background-color: #003393;
+}
+
+.preview-box {
+    position: relative;
+    text-align: center;
+    width: 330px;
+    height: 240px;
+    margin: 20px;
+    display: inline-block;
+}
+
+.preview {
+    position: relative;
+    text-align: center;
+    width: 330px;
+    height: 200px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.preview:hover {
+    opacity: 50%;
+}
+
+.city-name-preview {
+    position: absolute;
+    top: 0%;
+    left: 10%;
+    padding: 5px;
+    background-color: white;
+}
+
+.temperature-preview {
+    position: absolute;
+    top: 0%;
+    left: 70%;
+    padding: 5px;
+    background-color: white;
+}
+
+.clear-sky {
+    background-image: url('./daytime/clear_sky.jpg');
+    background-size: cover;
+}
+
+.cloud {
+    background-image: url('./daytime/cloud.jpg');
+    background-size: cover;
+}
+
+.mist {
+    background-image: url('./daytime/mist.jpg');
+    background-size: cover;
+}
+
+.dust {
+    background-image: url('./daytime/dust.jpg');
+    background-size: cover;
+}
+
+.drizzle {
+    background-image: url('./daytime/drizzle.jpg');
+    background-size: cover;
+}
+
+.rain {
+    background-image: url('./daytime/rain.jpg');
+    background-size: cover;
+}
+
+.breeze {
+    background-image: url('./daytime/breeze.png');
+    background-size: cover;
+}
+
+.thunderstorm {
+    background-image: url('./daytime/thunderstorm.jpg');
+    background-size: cover;
+}
+
+.display-none {
+    display: none;
+}
+
+.no-margin {
+    margin: 0px;
 }

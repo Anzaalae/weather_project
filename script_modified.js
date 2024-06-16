@@ -1,3 +1,19 @@
+let cityName, weather, temperature, feelsLike, humidity, 
+windDirection, windSpeed, pressure, cloudiness, 
+sunrise, sunset; // 날씨 정보 전역변수
+
+let addButton = document.createElement("button"); // 추가 버튼 노드
+    addButton.classList.add("add-button");
+    document.querySelector(".container").appendChild(addButton);
+    addButton.appendChild(document.createTextNode("ADD"));
+
+let deleteButton; // 삭제 버튼 노드
+
+let previewList; // 카드 리스트
+
+let previewContainerLeft = document.querySelector(".preview-container-left");
+let previewContainerRight = document.querySelector(".preview-container-right");
+
 document.getElementById('weather-form').addEventListener('submit', function (event) {
     event.preventDefault();
     const city = document.getElementById('city').value;
@@ -86,13 +102,24 @@ function displayWeather(data) {
         <p>Pressure: ${data.main.pressure} hPa</p>
         <p>Wind Direction: ${data.wind.deg}°</p>
         <p>Cloudiness: ${data.clouds.all}%</p>
+        <p>Visibility: ${data.visibility} m</p>
         <p>Sunrise: ${new Date(data.sys.sunrise * 1000).toLocaleTimeString()}</p>
         <p>Sunset: ${new Date(data.sys.sunset * 1000).toLocaleTimeString()}</p>
-        <p>Visibility: ${data.visibility} m</p>
         <p>Data Time: ${new Date(data.dt * 1000).toLocaleString()}</p>
-        <h2>3-Hourly Forecast</h2>
-        <div id="hourly-forecast"></div>
     `;
+
+    cityName = data.name;
+    temperature = data.main.temp;
+    weather = weatherDescription;
+    humidity = data.main.humidity;
+    windSpeed = data.wind.speed;
+    feelsLike = data.main.feels_like;
+    pressure = data.main.pressure;
+    windDirection = data.wind.deg;
+    cloudiness = data.clouds.all;
+    visibility = data.visibility;
+
+    addButton.addEventListener("click", addEvent);
 }
 
 function getWeatherDescription(weatherId) {
@@ -150,6 +177,7 @@ function getForecast(lat, lon) {
                 });
 
                 document.getElementById('hourly-forecast').innerHTML = `
+                    <h2>3-Hourly Forecast</h2>
                     ${forecastHtml}
                     <p>Min Temperature: ${minTemp}°C</p>
                     <p>Max Temperature: ${maxTemp}°C</p>
@@ -168,3 +196,112 @@ function getForecast(lat, lon) {
 window.onload = function() {
     getLocation();
 };
+
+// 추가 버튼 클릭 시 실행되는 함수
+const addEvent = function addEvent(data) {
+    // 추가하려는 지역과 기존의 지역의 중복 검사
+    previewList = document.querySelectorAll(".preview-box");
+
+    for (let i = 0; i < previewList.length; i++) {
+        if (this.parentNode.children[3].children[0].innerText 
+            == previewList[i].children[0].children[0].innerText) {
+                alert("The city is already in preview list");
+                return;
+        }
+    }
+
+    let preview = document.createElement("div");
+    preview.classList.add("preview");
+    preview.setAttribute("id", "preview");
+
+    preview.innerHTML = `
+    <h3 class="city-name-preview">${cityName}</h3>
+    <p class="temperature-preview">${temperature}°C</p>
+    <p class="display-none">${weather}</p>
+    <p class="display-none">${humidity}</p>
+    <p class="display-none">${windSpeed}</p>
+    `
+
+    switch (weather) {
+        case "clear sky":
+            preview.classList.add("clear-sky");
+            break;
+        case "cloud":
+            preview.classList.add("cloud");
+            break;
+        case "mist":
+            preview.classList.add("mist");
+            break;
+        case "dust":
+            preview.classList.add("dust");
+            break;
+        case "drizzle":
+            preview.classList.add("drizzle");
+            break;
+        case "rain":
+            preview.classList.add("rain");
+            break;
+        case "breeze":
+            preview.classList.add("breeze");
+            break;
+        case "thunderstorm":
+            preview.classList.add("thunderstorm");
+        default:
+            break;
+    }
+
+    let previewBox = document.createElement("div");
+    previewBox.classList.add("preview-box");
+
+    previewBox.appendChild(preview);
+
+    previewList = document.querySelectorAll(".preview-box"); // 지역이 추가됨에 따라 previewList 갱신
+
+    if (previewList.length < 2) {
+        previewContainerLeft.appendChild(previewBox);
+    }
+    else {
+        previewContainerRight.appendChild(previewBox);
+    }
+
+    deleteButton = document.createElement("button");
+    deleteButton.appendChild(document.createTextNode("DELETE"));
+    deleteButton.classList.add("delete-button");
+
+    previewBox.appendChild(deleteButton);
+    previewList = document.querySelectorAll(".preview-box");
+    for(let i = 0; i < previewList.length; i++) {
+        previewList[i].addEventListener("click", setBackground);
+    }
+
+    for(let i = 0; i < previewList.length; i++) {
+        previewList[i].addEventListener("dblclick", openNewPage);
+    }
+
+    deleteButton.addEventListener("click", deleteEvent);
+
+};
+
+// DELETE 클릭 시 실행되는 함수
+const deleteEvent = function deleteEvent(event) {
+    event.preventDefault();
+    let count = 0;
+    let previewBox = this.parentNode;
+
+    previewBox.parentNode.removeChild(previewBox);
+};
+
+// 카드를 한 번 클릭 시 실행되는 함수
+const setBackground = function setBackground() {
+    let weatherInfo = this.children[0].children[2].innerText;
+
+    if(weatherInfo == "clear sky") {
+        weatherInfo = "clear-sky";
+    }
+    document.body.setAttribute("class", weatherInfo);
+};
+
+// 카드를 더블클릭 시 실행되는 함수
+const openNewPage = function openNewPage() {
+    window.open("./new_page.html", "_blank"); // 1번째 인자가 새 창의 html 파일 경로입니다.
+}
