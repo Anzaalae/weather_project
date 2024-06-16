@@ -243,8 +243,11 @@ const addEvent = function addEvent(data) {
     if (previewList.length < 2) {
         previewContainerLeft.appendChild(previewBox);
     }
-    else {
+    else if (previewList.length >= 2 && previewList.length < 4) {
         previewContainerRight.appendChild(previewBox);
+    }
+    else {
+        alert("The preview list is already full");
     }
 
     deleteButton = document.createElement("button");
