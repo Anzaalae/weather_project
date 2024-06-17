@@ -195,7 +195,7 @@ const addEvent = function addEvent(data) {
 
     let preview = document.createElement("div");
     preview.classList.add("preview");
-    preview.setAttribute("id", "preview");
+    // preview.setAttribute("id", "preview");
 
     preview.innerHTML = `
     <h3 class="city-name-preview">${cityName}</h3>
@@ -257,11 +257,11 @@ const addEvent = function addEvent(data) {
     previewBox.appendChild(deleteButton);
     previewList = document.querySelectorAll(".preview-box");
     for(let i = 0; i < previewList.length; i++) {
-        previewList[i].addEventListener("click", setBackground);
+        previewList[i].firstChild.addEventListener("click", setBackground);
     }
 
     for(let i = 0; i < previewList.length; i++) {
-        previewList[i].addEventListener("dblclick", openNewPage);
+        previewList[i].firstChild.addEventListener("dblclick", openNewPage);
     }
 
     deleteButton.addEventListener("click", deleteEvent);
@@ -279,7 +279,7 @@ const deleteEvent = function deleteEvent(event) {
 
 // 카드를 한 번 클릭 시 실행되는 함수
 const setBackground = function setBackground() {
-    let weatherInfo = this.children[0].children[2].innerText;
+    let weatherInfo = this.children[2].innerText;
 
     if(weatherInfo == "clear sky") {
         weatherInfo = "clear-sky";
