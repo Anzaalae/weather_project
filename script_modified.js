@@ -1,6 +1,5 @@
-let cityName, weather, temperature, feelsLike, humidity, 
-windDirection, windSpeed, pressure, cloudiness, 
-sunrise, sunset; // 날씨 정보 전역변수
+let cityName, temperature, weather, humidity, windSpeed, feelsLike, temp_min, temp_max, pressure, windDirection, cloudiness, sunrise, sunset, visibility, dataTime; // 날씨 정보 전역변수
+let lat, lon;   // 지역 정보 전역변수
 
 let addButton = document.createElement("button"); // 추가 버튼 노드
     addButton.classList.add("add-button");
@@ -24,8 +23,8 @@ document.getElementById('weather-form').addEventListener('submit', function (eve
         .then(response => response.json())
         .then(data => {
             if (data.cod === 200) {
-                const lat = data.coord.lat;
-                const lon = data.coord.lon;
+                lat = data.coord.lat;
+                lon = data.coord.lon;
                 displayWeather(data);
                 getForecast(lat, lon);
             } else {
@@ -47,8 +46,8 @@ function getLocation() {
 }
 
 function showPosition(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
+    lat = position.coords.latitude;
+    lon = position.coords.longitude;
     getWeatherByCoordinates(lat, lon);
 }
 
@@ -104,10 +103,17 @@ function displayWeather(data) {
     humidity = data.main.humidity;
     windSpeed = data.wind.speed;
     feelsLike = data.main.feels_like;
+    temp_min = data.main.temp_min;
+    temp_max = data.main.temp_max;
     pressure = data.main.pressure;
     windDirection = data.wind.deg;
     cloudiness = data.clouds.all;
+    sunrise = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
+    sunset = new Date(data.sys.sunset * 1000).toLocaleString();
     visibility = data.visibility;
+    dataTime = new Date(data.dt * 1000).toLocaleString();
+    lat = data.coord.lat;
+    lon = data.coord.lon;
 
     addButton.addEventListener("click", addEvent);
 }
@@ -203,6 +209,18 @@ const addEvent = function addEvent(data) {
     <p class="display-none">${weather}</p>
     <p class="display-none">${humidity}</p>
     <p class="display-none">${windSpeed}</p>
+    <p class="display-none">${feelsLike}</p>
+    <p class="display-none">${temp_min}</p>
+    <p class="display-none">${temp_max}</p>
+    <p class="display-none">${pressure}</p>
+    <p class="display-none">${windDirection}</p>
+    <p class="display-none">${cloudiness}</p>
+    <p class="display-none">${sunrise}</p>
+    <p class="display-none">${sunset}</p>
+    <p class="display-none">${visibility}</p>
+    <p class="display-none">${dataTime}</p>
+    <p class="display-none">${lat}</p>
+    <p class="display-none">${lon}</p>
     `
 
     switch (weather) {
@@ -287,7 +305,45 @@ const setBackground = function setBackground() {
     document.body.setAttribute("class", weatherInfo);
 };
 
-// 카드를 더블클릭 시 실행되는 함수
 const openNewPage = function openNewPage() {
-    window.open("./new_page.html", "_blank"); // 1번째 인자가 새 창의 html 파일 경로입니다.
-}
+    const cityName = this.querySelector('.city-name-preview').innerText;
+    const temperature = this.querySelector('.temperature-preview').innerText;
+    const weather = this.querySelectorAll('.display-none')[0].innerText;
+    const humidity = this.querySelectorAll('.display-none')[1].innerText;
+    const windSpeed = this.querySelectorAll('.display-none')[2].innerText;
+    const feelsLike = this.querySelectorAll('.display-none')[3].innerText;
+    const temp_min = this.querySelectorAll('.display-none')[4].innerText;
+    const temp_max = this.querySelectorAll('.display-none')[5].innerText;
+    const pressure = this.querySelectorAll('.display-none')[6].innerText;
+    const windDirection = this.querySelectorAll('.display-none')[7].innerText;
+    const cloudiness = this.querySelectorAll('.display-none')[8].innerText;
+    // const sunrise = this.querySelectorAll('.display-none')[9].innerText;
+    // const sunset = this.querySelectorAll('.display-none')[10].innerText;
+    const visibility = this.querySelectorAll('.display-none')[11].innerText;
+    // const dataTime = this.querySelectorAll('.display-none')[12].innerText;
+    const lat = this.querySelectorAll('.display-none')[13].innerText;
+    const lon = this.querySelectorAll('.display-none')[14].innerText;
+
+    // 추가 정보를 localStorage에 저장
+    localStorage.setItem("cityName", cityName);
+    localStorage.setItem("temperature", temperature);
+    localStorage.setItem("weather", weather);
+    localStorage.setItem("humidity", humidity);
+    localStorage.setItem("windSpeed", windSpeed);
+    localStorage.setItem("feelsLike", feelsLike);
+    localStorage.setItem("temp_min", temp_min);
+    localStorage.setItem("temp_max", temp_max);
+    localStorage.setItem("pressure", pressure);
+    localStorage.setItem("windDirection", windDirection);
+    localStorage.setItem("cloudiness", cloudiness);
+    // localStorage.setItem("sunrise", sunrise);
+    // localStorage.setItem("sunset", sunset);
+    localStorage.setItem("visibility", visibility);
+    // localStorage.setItem("dataTime", dataTime);
+    // 날짜와 관련된 sunrise, sunset, dataTime의 값이 올바르지 않아 제외
+
+    localStorage.setItem("lat", lat);
+    localStorage.setItem("lon", lon);
+
+    window.open(`new_page.html?lat=${lat}&lon=${lon}`, '_blank'); // new_page.html로 lat, lon 값을 전달하도록 URL 수정
+};
