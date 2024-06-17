@@ -186,7 +186,7 @@ const addEvent = function addEvent(data) {
     previewList = document.querySelectorAll(".preview-box");
 
     for (let i = 0; i < previewList.length; i++) {
-        if (this.parentNode.children[3].children[0].innerText 
+        if (this.parentNode.children[2].children[0].innerText 
             == previewList[i].children[0].children[0].innerText) {
                 alert("The city is already in preview list");
                 return;
