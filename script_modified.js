@@ -262,17 +262,8 @@ const addEvent = function addEvent(data) {
         previewContainerLeft.appendChild(previewBox);
     }
     else if (previewList.length >= 2 && previewList.length < 4) {
-        //////////
-        let i = 0;
-        while (previewContainerLeft.childElementCount < 2) {
-            let temp = previewContainerRight.children[i];
-            previewContainerRight.removeChild(temp);
-            previewContainerLeft.appendChild(temp);
-            i++;
-        }
         previewContainerRight.appendChild(previewBox);
     }
-    //////////////
     else {
         alert("The preview list is already full");
     }
@@ -303,6 +294,7 @@ const deleteEvent = function deleteEvent(event) {
 
     previewBox.parentNode.removeChild(previewBox);
 
+    // 카드가 3개 이상일 때 왼쪽 카드를 삭제할 경우 왼쪽으로 카드가 2개 채워지도록 카드를 정렬
     let i = 0;
     while (previewContainerLeft.childElementCount < 2) {
         let temp = previewContainerRight.children[i];
