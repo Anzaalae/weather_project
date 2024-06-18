@@ -262,8 +262,17 @@ const addEvent = function addEvent(data) {
         previewContainerLeft.appendChild(previewBox);
     }
     else if (previewList.length >= 2 && previewList.length < 4) {
+        //////////
+        let i = 0;
+        while (previewContainerLeft.childElementCount < 2) {
+            let temp = previewContainerRight.children[i];
+            previewContainerRight.removeChild(temp);
+            previewContainerLeft.appendChild(temp);
+            i++;
+        }
         previewContainerRight.appendChild(previewBox);
     }
+    //////////////
     else {
         alert("The preview list is already full");
     }
@@ -293,6 +302,14 @@ const deleteEvent = function deleteEvent(event) {
     let previewBox = this.parentNode;
 
     previewBox.parentNode.removeChild(previewBox);
+
+    let i = 0;
+    while (previewContainerLeft.childElementCount < 2) {
+        let temp = previewContainerRight.children[i];
+        previewContainerRight.removeChild(temp);
+        previewContainerLeft.appendChild(temp);
+        i++;
+    }
 };
 
 // 카드를 한 번 클릭 시 실행되는 함수
