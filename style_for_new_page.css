@@ -21,7 +21,7 @@ h1 {
 
 /* 날씨 정보 컨테이너 스타일 */
 .weather-container {
-    background-color: #f5f5f5;
+    background-color: rgba(245, 245, 245, 0.8); /* 배경색의 투명도를 0.8로 설정 */
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -37,7 +37,7 @@ h1 {
 }
 
 .weather-forecast {
-    background-color: #f5f5f5;
+    background-color: rgba(245, 245, 245, 0.8); /* 배경색의 투명도를 0.8로 설정 */
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -53,7 +53,7 @@ h1 {
 }
 
 .info {
-    background-color: #f5f5f5;
+    background-color: rgba(245, 245, 245, 0.8); /* 배경색의 투명도를 0.8로 설정 */
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;

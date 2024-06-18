@@ -177,6 +177,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.body.style.backgroundImage = backgroundImage;
     document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.opacity = '0.8'; // 배경 이미지의 투명도를 0.7로 설정
 
     const weatherForecast = `
         <p id="hourly-forecast"></p>
