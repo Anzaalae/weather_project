@@ -68,6 +68,7 @@ function getForecast(lat, lon) {
         .then(data => {
             if (data.list && data.list.length > 0) {
                 const hourlyForecast = data.list.slice(0, 5); // 3시간 가격으로 5개의 온도 데이터
+                let forecastHeader = `<h2>기상 예보(3시간 단위)<h2>`;
                 let forecastHtml = '';
                 hourlyForecast.forEach(hour => {
                     const date = new Date(hour.dt * 1000);
@@ -76,7 +77,8 @@ function getForecast(lat, lon) {
                     timeList.push(date.toLocaleString());
                     temperatureList.push(temperature);
                 });
-                document.getElementById('hourly-forecast').innerHTML = forecastHtml;
+                document.getElementById('hourly-forecast').innerHTML = forecastHeader + forecastHtml;
+                // document.getElementById('hourly-forecast').innerHTML = forecastHtml;
             } else {
                 alert('Hourly forecast data not available');
             }
